@@ -1,0 +1,8 @@
+export const ROLES = {
+  ADMIN: 'ADMIN',
+  SUPERVISOR: 'SUPERVISOR',
+  TECNICO: 'TECNICO',
+  OPERADOR: 'OPERADOR',
+} as const
+
+export const ROLES_WITH_PASSWORD: readonly string[] = [ROLES.ADMIN, ROLES.SUPERVISOR]
