@@ -4,6 +4,8 @@ import './index.css'
 import App from './App.tsx'
 import { TooltipProvider } from '@/components/ui/tooltip'
 
+console.log('API URL:', import.meta.env.VITE_API_URL)
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <TooltipProvider>

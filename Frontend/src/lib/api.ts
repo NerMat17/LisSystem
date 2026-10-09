@@ -1,5 +1,11 @@
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api'
 
+let accessToken: string | null = null
+
+export function setAccessToken(token: string | null) {
+  accessToken = token
+}
+
 export class ApiError extends Error {
   status: number
 
@@ -11,10 +17,19 @@ export class ApiError extends Error {
 }
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const response = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers: { 'Content-Type': 'application/json', ...options.headers },
-  })
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+  if (accessToken) headers.Authorization = `Bearer ${accessToken}`
+
+  let response: Response
+  try {
+    response = await fetch(`${API_URL}${path}`, {
+      ...options,
+      headers: { ...headers, ...(options.headers as Record<string, string> | undefined) },
+    })
+  } catch {
+    // No hubo respuesta: servidor apagado, sin red o URL incorrecta
+    throw new ApiError(0, 'No se pudo conectar con el servidor. Intenta de nuevo.')
+  }
 
   const body = await response.json().catch(() => null)
 
